@@ -1,0 +1,16 @@
+library(dplyr)
+data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?")
+data$DateTime <- paste(data$Date, data$Time) # merge date and time
+data$DateTime <- as.POSIXct(data$DateTime, format = "%d/%m/%Y %H:%M:%S") # change format of date time to date
+data <- filter(data, DateTime >= "2007-02-01 00:00:00", DateTime < "2007-02-03 00:00:00")
+par(mfrow = c(2,2))
+par(mar=c(4,4,2,2))
+plot(data$DateTime, data$Global_active_power, ylab = "Global Active Power", xlab = "", type = "l")
+plot(data$DateTime, data$Voltage, ylab = "Voltage", xlab = "datetime", type = "l")
+plot(data$DateTime, data$Sub_metering_1, ylab = "Energy sub metering", xlab = "", type = "l")
+lines(data$DateTime, data$Sub_metering_2, col = "red")
+lines(data$DateTime, data$Sub_metering_3, col = "blue")
+legend("topright", pch = "-", cex= 0.75, bty = "n", col =c("black", "red", "blue"), legend = c("sub_metering_1", "sub_metering_2", "sub_metering_3"))
+plot(data$DateTime, data$Global_reactive_power, ylab = "Global_reactive_power", xlab = "datetime", type = "l")
+dev.copy(png, file = "plot4.png")
+dev.off()
